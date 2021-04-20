@@ -3,16 +3,7 @@ import React from 'react';
 import { AppBar, Box, Button, Container, IconButton, Toolbar, Typography } from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
 
-import { makeStyles } from '@material-ui/core/styles';
-
-const useStyles = makeStyles((theme) => ({
-  menuButton: {
-    marginRight: theme.spacing(1)
-  },
-  title: {
-    flexGrow: 1
-  }
-}));
+import { useStyles } from './styles';
 
 export const TopBar = () => {
   const classes = useStyles();

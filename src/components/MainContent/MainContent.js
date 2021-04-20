@@ -1,66 +1,40 @@
 import React, { useState, useCallback } from 'react';
 
-import { Button, Card, CardActions, CardContent, CardMedia, Container, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Grid, Paper, Typography } from '@material-ui/core';
+import { Box, Button, Card, CardActions, CardContent, CardMedia, Container, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Grid, Paper, TextField, Typography } from '@material-ui/core';
 
 import LayerIcon from '@material-ui/icons/Layers';
 import PlayerCircleFilledIcon from '@material-ui/icons/PlayCircleFilled';
-
-import { makeStyles } from '@material-ui/core/styles';
-
-const useStyles = makeStyles((theme) => ({
-  mainFeaturesPost: {
-    position: "relative",
-    color: theme.palette.common.white,
-    marginBottom: theme.spacing(4),
-
-    backgroundSize: "cover",
-    backgroundRepeat: "no-repeat",
-    backgroundPosition: "center",
-  },
-  overlay: {
-    position: "absolute",
-    top: 0,
-    bottom: 0,
-    right: 0,
-    left: 0,
-    backgroundColor: "rgba(0,0,0,.3)",
-  },
-  mainFeaturesPostContent: {
-    position: "relative",
-    padding: theme.spacing(6),
-    marginTop: theme.spacing(6),
-  },
-  cardMedia: {
-    paddingTop: "55%"
-  },
-  cardContent: {
-    flexGrow: 1
-  },
-  cardGrid: {
-    marginTop: theme.spacing(4),
-  }
-}));
+import { useStyles } from './styles';
 
 const productsList = [1,2,3,4,5,6,7,8];
 
 export const MainContent = () => {
   const classes = useStyles();
   const [products, setProducts] = useState(productsList);
-  const [open, setOpen] = useState(false);
+  const [addOpen, setAddOpen] = useState(false);
+  const [removeOpen, setRemoveOpen] = useState(false);
+
+  const handleAddOpen = () => {
+    setAddOpen(true);
+  }
+
+  const handleAddClose = () => {
+    setAddOpen(false);
+  }
 
   const handleRemove = useCallback((id) => {
     const newProductsList = products.filter(product => product !== id);
-
     setProducts(newProductsList);
-    setOpen(false);
+    setRemoveOpen(false);
   }, [products]);
 
-  const handleClickOpen = () => {
-    setOpen(true);
+  const handleRemoveOpen = (event) => {
+    console.log(event);
+    setRemoveOpen(true);
   }
 
-  const handleClose = () => {
-    setOpen(false);
+  const handleRemoveClose = () => {
+    setRemoveOpen(false);
   }
 
   return (
@@ -95,7 +69,7 @@ export const MainContent = () => {
           </Grid>
         </Container>
       </Paper>
-      
+
       <div className={classes.mainContent}>
         <Container maxWidth="sm">
           <Typography
@@ -109,7 +83,98 @@ export const MainContent = () => {
           <div className={classes.mainButtons}>
             <Grid container spacing={3} justify="center">
               <Grid item>
-                <Button variant="contained" color="primary">Start Now</Button>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={handleAddOpen}
+                >
+                  Add product
+                </Button>
+                <Dialog
+                  open={addOpen}
+                  onClose={handleAddClose}
+                  aria-labelledby="form-dialog-title-add"
+                >
+                  <DialogTitle id="add-dialog-title">Add product</DialogTitle>
+                  <DialogContent>
+                    <DialogContentText>Add new product</DialogContentText>
+                    <TextField
+                      autoFocus
+                      margin="dense"
+                      id="name"
+                      label="Name"
+                      type="text"
+                      fullWidth
+                    />
+                    <TextField
+                      margin="dense"
+                      id="description"
+                      label="Description"
+                      type="text"
+                      fullWidth
+                      multiline
+                    />
+                    <TextField
+                      margin="dense"
+                      id="description"
+                      label="Image Url"
+                      type="text"
+                      fullWidth
+                    />
+                    <TextField
+                      margin="dense"
+                      id="height"
+                      label="Height"
+                      type="number"
+                    />
+                    <TextField
+                      margin="dense"
+                      id="weight"
+                      label="Weight"
+                      type="number"
+                    />
+                    <br/>
+                    <TextField
+                      margin="dense"
+                      id="quantity"
+                      label="Quantity"
+                      type="number"
+                    />
+                    <br/>
+                    <TextField
+                      margin="dense"
+                      id="width"
+                      label="Width"
+                      type="number"
+                    />
+                    <Box width={1/5}>
+                      <TextField
+                        margin="dense"
+                        id="color"
+                        label="Color"
+                        type="color"
+                        fullWidth
+                      />
+                    </Box>
+                    
+                  </DialogContent>
+                  <DialogActions>
+                    <Button
+                      size="small"
+                      color="primary"
+                      // onClick={}
+                    >
+                      Save
+                    </Button>
+                    <Button
+                      size="small"
+                      onClick={handleAddClose}
+                      color="secondary"
+                    >
+                      Cancel
+                    </Button>
+                  </DialogActions>
+                </Dialog>
               </Grid>
               <Grid item>
                 <Button variant="outlined" color="primary">Learn More</Button>
@@ -142,13 +207,13 @@ export const MainContent = () => {
                   <Button
                     size="small"
                     color="secondary"
-                    onClick={handleClickOpen}
-                    >
+                    onClick={handleRemoveOpen}
+                  >
                     Remove
                   </Button>
                   <Dialog
-                    open={open}
-                    onClose={handleClose}
+                    open={removeOpen}
+                    onClose={handleRemoveClose}
                     aria-labelledby="form-dialog-title"
                   >
                     <DialogTitle id="remove-dialog-title">Remove product</DialogTitle>
@@ -165,7 +230,7 @@ export const MainContent = () => {
                       </Button>
                       <Button
                         size="small"
-                        onClick={handleClose}
+                        onClick={handleRemoveClose}
                         color="primary"
                       >
                         Cancel
