@@ -1,10 +1,16 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './App.css';
 
-import { AppBar, Box, Button, Card, CardActions, CardContent, CardMedia, Container, Grid, IconButton, Paper, Toolbar, Typography } from '@material-ui/core';
+import { AppBar, BottomNavigation, BottomNavigationAction, Box, Button, Card, CardActions, CardContent, CardMedia, Container, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Grid, IconButton, Paper, Toolbar, Typography } from '@material-ui/core';
+
 import MenuIcon from '@material-ui/icons/Menu';
 import LayerIcon from '@material-ui/icons/Layers';
 import PlayerCircleFilledIcon from '@material-ui/icons/PlayCircleFilled';
+import FolderIcon from '@material-ui/icons/Folder';
+import RestoreIcon from '@material-ui/icons/Restore';
+import FavoriteIcon from '@material-ui/icons/Favorite';
+import LocationOnIcon from '@material-ui/icons/LocationOn';
+
 import { makeStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles((theme) => ({
@@ -41,6 +47,12 @@ const useStyles = makeStyles((theme) => ({
   },
   cardMedia: {
     paddingTop: "55%"
+  },
+  cardContent: {
+    flexGrow: 1
+  },
+  cardGrid: {
+    marginTop: theme.spacing(4),
   }
 }));
 
@@ -53,33 +65,54 @@ const useStyles = makeStyles((theme) => ({
 
 // firebase.initializeApp({})
 
-const cards = [1,2,3,4,5,6,7,8];
+const productsList = [1,2,3,4,5,6,7,8];
 
-function App() {
+export const App = () => {
   const classes = useStyles();
+  const [products, setProducts] = useState(productsList);
+  const [value, setValue] = useState("recents");
+  const [open, setOpen] = useState(false);
+
+  const handleChange = (event, newValue) => {
+    setValue(newValue);
+  };
+
+  const handleRemove = (id) => {
+    const newProductsList = products.filter(product => product !== id);
+
+    setProducts(newProductsList);
+    setOpen(false);
+  };
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  }
+
+  const handleClose = () => {
+    setOpen(false);
+  }
+
   return (
     <>
-      <div className="App">
-        <AppBar position="fixed">
-          <Container fixed>
-            <Toolbar>
-              <IconButton
-                edge="start"
-                className={classes.menuButton}
-                color="inherit"
-                aria-label="menu"
-              >
-                <MenuIcon />
-              </IconButton>
-              <Typography variant="h6" className={classes.title}>Products list</Typography>
-              <Box mr={3}>
-                <Button color="inherit" variant="outlined">Log in</Button>
-              </Box>
-              <Button color="secondary" variant="contained">Sign up</Button>
-            </Toolbar>
-          </Container>
-        </AppBar>
-      </div>
+      <AppBar position="fixed">
+        <Container fixed>
+          <Toolbar>
+            <IconButton
+              edge="start"
+              className={classes.menuButton}
+              color="inherit"
+              aria-label="menu"
+            >
+              <MenuIcon />
+            </IconButton>
+            <Typography variant="h6" className={classes.title}>Products list</Typography>
+            <Box mr={3}>
+              <Button color="inherit" variant="outlined">Log in</Button>
+            </Box>
+            <Button color="secondary" variant="contained">Sign up</Button>
+          </Toolbar>
+        </Container>
+      </AppBar>
 
       <main>
         <Paper
@@ -138,8 +171,8 @@ function App() {
 
         <Container className={classes.cardGrid} maxWidth="md">
           <Grid container spacing={4}>
-            {cards.map((card) => (
-              <Grid item key={card} xs={12} sm={6} md={4}>
+            {products.map((product) => (
+              <Grid item key={product} xs={12} sm={6} md={4}>
                 <Card className={classes.card}>
                   <CardMedia
                     className={classes.cardMedia}
@@ -156,7 +189,39 @@ function App() {
                   </CardContent>
                   <CardActions>
                     <Button size="small" color="primary">View</Button>
-                    <Button size="small" color="primary">Edit</Button>
+                    <Button
+                      size="small"
+                      color="secondary"
+                      onClick={handleClickOpen}
+                      >
+                      Remove
+                    </Button>
+                    <Dialog
+                      open={open}
+                      onClose={handleClose}
+                      aria-labelledby="form-dialog-title"
+                    >
+                      <DialogTitle id="remove-dialog-title">Remove product</DialogTitle>
+                      <DialogContent>
+                        <DialogContentText>Are you sure you want to remove the product?</DialogContentText>
+                      </DialogContent>
+                      <DialogActions>
+                        <Button
+                          size="small"
+                          color="secondary"
+                          onClick={() => handleRemove(product)}
+                        >
+                          Remove
+                        </Button>
+                        <Button
+                          size="small"
+                          onClick={handleClose}
+                          color="primary"
+                        >
+                          Cancel
+                        </Button>
+                      </DialogActions>
+                    </Dialog>
                     <LayerIcon />
                     <PlayerCircleFilledIcon />
                   </CardActions>
@@ -166,8 +231,44 @@ function App() {
           </Grid>
         </Container>
       </main>
+
+      <footer>
+        <Typography variant="h6" align="center" gutterBottom>Footer</Typography>
+        <BottomNavigation
+          value={value}
+          onChange={handleChange}
+          className={classes.root}
+        >
+          <BottomNavigationAction
+            label="Recents"
+            value="recents"
+            icon={<RestoreIcon />}
+          />
+          <BottomNavigationAction
+            label="Favorites"
+            value="favorites"
+            icon={<FavoriteIcon />}
+          />
+          <BottomNavigationAction
+            label="Nearby"
+            value="nearby"
+            icon={<LocationOnIcon />}
+          />
+          <BottomNavigationAction
+            label="Folder"
+            value="folder"
+            icon={<FolderIcon />}
+          />
+        </BottomNavigation>
+        <Typography
+          align="center"
+          color="textSecondary"
+          component="p"
+          subtitle={1}
+        >
+          Products list
+        </Typography>
+      </footer>
     </>
   );
 }
-
-export default App;
