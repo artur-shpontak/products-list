@@ -14,8 +14,6 @@ export const Footer = () => {
   const [value, setValue] = useState("recents");
 
   const handleChange = useCallback((event, newValue) => {
-    console.log(newValue);
-
     setValue(newValue);
   }, []);
 

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './App.css';
 
 import { TopBar } from './components/TopBar';
@@ -15,10 +15,18 @@ import { Footer } from './components/Footer/Footer';
 // firebase.initializeApp({})
 
 export const App = () => {
+  const [count, setCount] = useState(9);
+
+  function setNewIdForProduct() {
+    setCount(count + 1);
+
+    return count;
+  }
+
   return (
     <>
       <TopBar />
-      <MainContent />
+      <MainContent setNewId={setNewIdForProduct} />
       <Footer />
     </>
   );

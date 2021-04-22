@@ -5,7 +5,7 @@ export const useStyles = makeStyles((theme) => ({
       position: "relative",
       color: theme.palette.common.white,
       marginBottom: theme.spacing(4),
-  
+
       backgroundSize: "cover",
       backgroundRepeat: "no-repeat",
       backgroundPosition: "center",

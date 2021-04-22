@@ -1,17 +1,36 @@
 import React, { useState, useCallback } from 'react';
 
-import { Box, Button, Card, CardActions, CardContent, CardMedia, Container, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Grid, Paper, TextField, Typography } from '@material-ui/core';
+import { Button, Card, CardActions, CardContent, CardMedia, Container, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Grid, Paper, Typography } from '@material-ui/core';
 
-import LayerIcon from '@material-ui/icons/Layers';
-import PlayerCircleFilledIcon from '@material-ui/icons/PlayCircleFilled';
+import LocalOfferIcon from '@material-ui/icons/LocalOffer';
+import LocalGroceryStoreIcon from '@material-ui/icons/LocalGroceryStore';
+import MoodIcon from '@material-ui/icons/Mood';
 import { useStyles } from './styles';
+import { DialogForm } from '../DialogForm/DialogForm';
+// const { v4: uuidv4 } = require('uuid');
 
-const productsList = [1,2,3,4,5,6,7,8];
+const product = {
+  name: 'Product name',
+  description: 'Product description',
+  imageUrl: 'https://source.unsplash.com/random',
+  height: '200',
+  width: '200',
+  quantity: '4',
+  weight: '200',
+}
 
-export const MainContent = () => {
+const productsList = Array(8);
+
+for (let i = 0; i < productsList.length; i++) {
+  productsList[i] = {...product, id: i + 1};
+}
+
+export const MainContent = ({ setNewId }) => {
   const classes = useStyles();
+
   const [products, setProducts] = useState(productsList);
   const [addOpen, setAddOpen] = useState(false);
+  const [viewOpen, setViewOpen] = useState(false);
   const [removeOpen, setRemoveOpen] = useState(false);
 
   const handleAddOpen = () => {
@@ -22,14 +41,36 @@ export const MainContent = () => {
     setAddOpen(false);
   }
 
-  const handleRemove = useCallback((id) => {
-    const newProductsList = products.filter(product => product !== id);
-    setProducts(newProductsList);
-    setRemoveOpen(false);
+  const handleAddProduct = (newProduct) => {
+    setProducts([...products, { ...newProduct, id: setNewId()}]);
+  }
+
+  const handleViewOpen = () => {
+    setViewOpen(true);
+  }
+
+  const handleViewClose = () => {
+    setViewOpen(false);
+  }
+
+  const handleChangeProduct = (changedProduct) => {
+    console.log(changedProduct);
+    const index = products.findIndex(item => item.id === changedProduct.id);
+
+    products[index] = {...changedProduct};
+  }
+
+  //TODO function to remove product by id
+  const handleRemoveProduct = useCallback((productId) => {
+    const newProductsList = products.filter(product => product.id !== productId);
+
+    console.log(productId, newProductsList);
+
+    // setProducts(newProductsList);
+    handleRemoveClose();
   }, [products]);
 
-  const handleRemoveOpen = (event) => {
-    console.log(event);
+  const handleRemoveOpen = () => {
     setRemoveOpen(true);
   }
 
@@ -90,91 +131,12 @@ export const MainContent = () => {
                 >
                   Add product
                 </Button>
-                <Dialog
+                <DialogForm
                   open={addOpen}
-                  onClose={handleAddClose}
-                  aria-labelledby="form-dialog-title-add"
-                >
-                  <DialogTitle id="add-dialog-title">Add product</DialogTitle>
-                  <DialogContent>
-                    <DialogContentText>Add new product</DialogContentText>
-                    <TextField
-                      autoFocus
-                      margin="dense"
-                      id="name"
-                      label="Name"
-                      type="text"
-                      fullWidth
-                    />
-                    <TextField
-                      margin="dense"
-                      id="description"
-                      label="Description"
-                      type="text"
-                      fullWidth
-                      multiline
-                    />
-                    <TextField
-                      margin="dense"
-                      id="description"
-                      label="Image Url"
-                      type="text"
-                      fullWidth
-                    />
-                    <TextField
-                      margin="dense"
-                      id="height"
-                      label="Height"
-                      type="number"
-                    />
-                    <TextField
-                      margin="dense"
-                      id="weight"
-                      label="Weight"
-                      type="number"
-                    />
-                    <br/>
-                    <TextField
-                      margin="dense"
-                      id="quantity"
-                      label="Quantity"
-                      type="number"
-                    />
-                    <br/>
-                    <TextField
-                      margin="dense"
-                      id="width"
-                      label="Width"
-                      type="number"
-                    />
-                    <Box width={1/5}>
-                      <TextField
-                        margin="dense"
-                        id="color"
-                        label="Color"
-                        type="color"
-                        fullWidth
-                      />
-                    </Box>
-                    
-                  </DialogContent>
-                  <DialogActions>
-                    <Button
-                      size="small"
-                      color="primary"
-                      // onClick={}
-                    >
-                      Save
-                    </Button>
-                    <Button
-                      size="small"
-                      onClick={handleAddClose}
-                      color="secondary"
-                    >
-                      Cancel
-                    </Button>
-                  </DialogActions>
-                </Dialog>
+                  handleClose={handleAddClose}
+                  handleSubmit={handleAddProduct}
+                  isNewItem={true}
+                />
               </Grid>
               <Grid item>
                 <Button variant="outlined" color="primary">Learn More</Button>
@@ -187,7 +149,7 @@ export const MainContent = () => {
       <Container className={classes.cardGrid} maxWidth="md">
         <Grid container spacing={4}>
           {products.map((product) => (
-            <Grid item key={product} xs={12} sm={6} md={4}>
+            <Grid item key={product.id} xs={12} sm={6} md={4}>
               <Card className={classes.card}>
                 <CardMedia
                   className={classes.cardMedia}
@@ -196,14 +158,32 @@ export const MainContent = () => {
                 />
                 <CardContent className={classes.cardContent}>
                   <Typography variant="h5" gutterBottom>
-                    Product name
+                    {product.name}
                   </Typography>
                   <Typography>
-                    Product description
+                    {product.description}
+                    <br/>
+                    Quantity: {product.quantity}
+                    <br/>
+                    {`Size: ${product.width}x${product.height}cm`}
+                    <br/>
+                    {`Weight: ${product.weight}g`}
                   </Typography>
                 </CardContent>
                 <CardActions>
-                  <Button size="small" color="primary">View</Button>
+                  <Button
+                    size="small"
+                    color="primary"
+                    onClick={handleViewOpen}
+                  >
+                    View
+                  </Button>
+                  <DialogForm
+                    open={viewOpen}
+                    handleClose={handleViewClose}
+                    handleSubmit={handleChangeProduct}
+                    initialProduct={product}
+                  />
                   <Button
                     size="small"
                     color="secondary"
@@ -224,7 +204,7 @@ export const MainContent = () => {
                       <Button
                         size="small"
                         color="secondary"
-                        onClick={() => handleRemove(product)}
+                        onClick={() => handleRemoveProduct(product.id)}
                       >
                         Remove
                       </Button>
@@ -237,8 +217,11 @@ export const MainContent = () => {
                       </Button>
                     </DialogActions>
                   </Dialog>
-                  <LayerIcon />
-                  <PlayerCircleFilledIcon />
+                  {/* <LayerIcon />
+                  <PlayerCircleFilledIcon /> */}
+                  <LocalGroceryStoreIcon />
+                  <LocalOfferIcon />
+                  <MoodIcon />
                 </CardActions>
               </Card>
             </Grid>
