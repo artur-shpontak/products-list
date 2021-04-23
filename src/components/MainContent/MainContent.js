@@ -1,13 +1,14 @@
 import React, { useState, useCallback } from 'react';
 
-import { Button, Card, CardActions, CardContent, CardMedia, Container, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Grid, Paper, Typography } from '@material-ui/core';
+import { Button, Card, CardActions, CardContent, CardMedia, Container, Grid, Typography } from '@material-ui/core';
 
 import LocalOfferIcon from '@material-ui/icons/LocalOffer';
 import LocalGroceryStoreIcon from '@material-ui/icons/LocalGroceryStore';
 import MoodIcon from '@material-ui/icons/Mood';
 import { useStyles } from './styles';
-import { DialogForm } from '../DialogForm/DialogForm';
-// const { v4: uuidv4 } = require('uuid');
+import { DialogForm } from '../DialogForm';
+import { DialogRemove } from '../DialogRemove';
+import { MainPost } from '../MainPost';
 
 const product = {
   name: 'Product name',
@@ -33,83 +34,53 @@ export const MainContent = ({ setNewId }) => {
   const [viewOpen, setViewOpen] = useState(false);
   const [removeOpen, setRemoveOpen] = useState(false);
 
-  const handleAddOpen = () => {
+  const handleAddOpen = useCallback(() => {
     setAddOpen(true);
-  }
+  }, []);
 
-  const handleAddClose = () => {
+  const handleAddClose = useCallback(() => {
     setAddOpen(false);
-  }
+  }, []);
 
-  const handleAddProduct = (newProduct) => {
+  const handleAddProduct = useCallback((newProduct) => {
     setProducts([...products, { ...newProduct, id: setNewId()}]);
-  }
+  }, [products, setNewId]);
 
-  const handleViewOpen = () => {
+  const handleViewOpen = useCallback(() => {
     setViewOpen(true);
-  }
+  }, []);
 
-  const handleViewClose = () => {
+  const handleViewClose = useCallback(() => {
     setViewOpen(false);
-  }
+  }, []);
 
-  const handleChangeProduct = (changedProduct) => {
-    console.log(changedProduct);
+  //TODO correct work for this method(currently editing the last item from list, regardless of which one was selected)
+  const handleChangeProduct = useCallback((changedProduct) => {
     const index = products.findIndex(item => item.id === changedProduct.id);
 
     products[index] = {...changedProduct};
-  }
-
-  //TODO function to remove product by id
-  const handleRemoveProduct = useCallback((productId) => {
-    const newProductsList = products.filter(product => product.id !== productId);
-
-    console.log(productId, newProductsList);
-
-    // setProducts(newProductsList);
-    handleRemoveClose();
   }, [products]);
 
-  const handleRemoveOpen = () => {
-    setRemoveOpen(true);
-  }
+  //TODO correct work for this method(currently removing only last item from list, regardless of which one was selected)
+  const handleRemove = useCallback((event) => {
+    const productId = event.currentTarget.value;
+    const newProductsList = products.filter(product => product.id !== +productId);
 
-  const handleRemoveClose = () => {
+    setProducts([...newProductsList]);
     setRemoveOpen(false);
-  }
+  }, [products]);
+
+  const handleRemoveOpen = useCallback(() => {
+    setRemoveOpen(true);
+  }, []);
+
+  const handleRemoveClose = useCallback(() => {
+    setRemoveOpen(false);
+  }, []);
 
   return (
     <main>
-      <Paper
-        className={classes.mainFeaturesPost}
-        style={{ backgroundImage: `url(https://source.unsplash.com/random)` }}
-      >
-        <Container fixed>
-          <div className={classes.overlay} />
-          <Grid container>
-            <Grid item md={6}>
-              <div className={classes.mainFeaturesPostContent}>
-                <Typography
-                  component="h1"
-                  variant="h3"
-                  color="inherit"
-                  gutterBottom
-                >
-                  Products list
-                </Typography>
-                <Typography
-                  component="h5"
-                  color="inherit"
-                  paragraph
-                >
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-                </Typography>
-                <Button variant="contained" color="secondary">Learn more</Button>
-              </div>
-            </Grid>
-          </Grid>
-        </Container>
-      </Paper>
+      <MainPost />
 
       <div className={classes.mainContent}>
         <Container maxWidth="sm">
@@ -191,37 +162,15 @@ export const MainContent = ({ setNewId }) => {
                   >
                     Remove
                   </Button>
-                  <Dialog
+                  <DialogRemove
                     open={removeOpen}
-                    onClose={handleRemoveClose}
-                    aria-labelledby="form-dialog-title"
-                  >
-                    <DialogTitle id="remove-dialog-title">Remove product</DialogTitle>
-                    <DialogContent>
-                      <DialogContentText>Are you sure you want to remove the product?</DialogContentText>
-                    </DialogContent>
-                    <DialogActions>
-                      <Button
-                        size="small"
-                        color="secondary"
-                        onClick={() => handleRemoveProduct(product.id)}
-                      >
-                        Remove
-                      </Button>
-                      <Button
-                        size="small"
-                        onClick={handleRemoveClose}
-                        color="primary"
-                      >
-                        Cancel
-                      </Button>
-                    </DialogActions>
-                  </Dialog>
-                  {/* <LayerIcon />
-                  <PlayerCircleFilledIcon /> */}
-                  <LocalGroceryStoreIcon />
-                  <LocalOfferIcon />
-                  <MoodIcon />
+                    handleClose={handleRemoveClose}
+                    handleSubmit={handleRemove}
+                    product={product}
+                  />
+                  <LocalGroceryStoreIcon color="primary" />
+                  <LocalOfferIcon color="primary" />
+                  <MoodIcon color="primary" />
                 </CardActions>
               </Card>
             </Grid>

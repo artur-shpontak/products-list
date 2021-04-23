@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import './App.css';
 
 import { TopBar } from './components/TopBar';
-import { MainContent } from './components/MainContent/MainContent';
-import { Footer } from './components/Footer/Footer';
+import { MainContent } from './components/MainContent';
+import { Footer } from './components/Footer';
 
 // import firebase from 'firebase/app';
 // import 'firebase/firestore';

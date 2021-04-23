@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { DialogFormType } from '../../types';
 
 import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField } from '@material-ui/core';
 
@@ -6,19 +7,11 @@ export const DialogForm = ({
   open,
   handleClose,
   handleSubmit,
-  isNewItem = false,
-  initialProduct = {
-    name: '',
-    description: '',
-    imageUrl: '',
-    height: '',
-    width: '',
-    quantity: '',
-    weight: '',
-  }
+  isNewItem,
+  initialProduct,
 }) => {
-  const [ isDisabledEditing, setIsDisabledEditing ] = useState(!isNewItem);
-  const [ product, setProduct] = useState(initialProduct);
+  const [isDisabledEditing, setIsDisabledEditing] = useState(!isNewItem);
+  const [product, setProduct] = useState(initialProduct);
 
   const onSubmit = () => {
     handleSubmit(product);
@@ -47,9 +40,9 @@ export const DialogForm = ({
     <Dialog
       open={open}
       onClose={handleClose}
-      aria-labelledby="form-dialog-title-add"
+      aria-labelledby="form-dialog-title"
     >
-      <DialogTitle id="add-dialog-title">
+      <DialogTitle id="form-dialog-title">
         {isNewItem ? 'Add product' : initialProduct.name}
       </DialogTitle>
       <DialogContent>
@@ -147,3 +140,18 @@ export const DialogForm = ({
     </Dialog>
   );
 }
+
+DialogForm.defaultProps = {
+  isNewItem: false,
+  initialProduct: {
+    name: '',
+    description: '',
+    imageUrl: '',
+    height: '',
+    width: '',
+    quantity: '',
+    weight: '',
+  }
+}
+
+DialogForm.propTypes = DialogFormType;
