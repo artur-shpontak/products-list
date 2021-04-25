@@ -1,14 +1,11 @@
 import React, { useState, useCallback } from 'react';
 
-import { Button, Card, CardActions, CardContent, CardMedia, Container, Grid, Typography } from '@material-ui/core';
+import { Button, Container, Grid, Typography } from '@material-ui/core';
 
-import LocalOfferIcon from '@material-ui/icons/LocalOffer';
-import LocalGroceryStoreIcon from '@material-ui/icons/LocalGroceryStore';
-import MoodIcon from '@material-ui/icons/Mood';
 import { useStyles } from './styles';
 import { DialogForm } from '../DialogForm';
-import { DialogRemove } from '../DialogRemove';
 import { MainPost } from '../MainPost';
+import { ProductCard } from '../ProductCard';
 
 const product = {
   name: 'Product name',
@@ -31,8 +28,6 @@ export const MainContent = ({ setNewId }) => {
 
   const [products, setProducts] = useState(productsList);
   const [addOpen, setAddOpen] = useState(false);
-  const [viewOpen, setViewOpen] = useState(false);
-  const [removeOpen, setRemoveOpen] = useState(false);
 
   const handleAddOpen = useCallback(() => {
     setAddOpen(true);
@@ -46,42 +41,24 @@ export const MainContent = ({ setNewId }) => {
     setProducts([...products, { ...newProduct, id: setNewId()}]);
   }, [products, setNewId]);
 
-  const handleViewOpen = useCallback(() => {
-    setViewOpen(true);
-  }, []);
-
-  const handleViewClose = useCallback(() => {
-    setViewOpen(false);
-  }, []);
-
-  //TODO correct work for this method(currently editing the last item from list, regardless of which one was selected)
+  //TODO correct work for this method(currently edit selected product, but doesn't call re-render for the card)
   const handleChangeProduct = useCallback((changedProduct) => {
     const index = products.findIndex(item => item.id === changedProduct.id);
 
     products[index] = {...changedProduct};
   }, [products]);
 
-  //TODO correct work for this method(currently removing only last item from list, regardless of which one was selected)
-  const handleRemove = useCallback((event) => {
-    const productId = event.currentTarget.value;
-    const newProductsList = products.filter(product => product.id !== +productId);
+  const handleRemoveProduct = useCallback((removableProductId) => {
+    const newProductsList = products.filter(product => product.id !== removableProductId);
 
     setProducts([...newProductsList]);
-    setRemoveOpen(false);
   }, [products]);
-
-  const handleRemoveOpen = useCallback(() => {
-    setRemoveOpen(true);
-  }, []);
-
-  const handleRemoveClose = useCallback(() => {
-    setRemoveOpen(false);
-  }, []);
 
   return (
     <main>
       <MainPost />
 
+      {/* TODO create ProductsList component */}
       <div className={classes.mainContent}>
         <Container maxWidth="sm">
           <Typography
@@ -121,58 +98,11 @@ export const MainContent = ({ setNewId }) => {
         <Grid container spacing={4}>
           {products.map((product) => (
             <Grid item key={product.id} xs={12} sm={6} md={4}>
-              <Card className={classes.card}>
-                <CardMedia
-                  className={classes.cardMedia}
-                  image="https://source.unsplash.com/random"
-                  title="Image title"
-                />
-                <CardContent className={classes.cardContent}>
-                  <Typography variant="h5" gutterBottom>
-                    {product.name}
-                  </Typography>
-                  <Typography>
-                    {product.description}
-                    <br/>
-                    Quantity: {product.quantity}
-                    <br/>
-                    {`Size: ${product.width}x${product.height}cm`}
-                    <br/>
-                    {`Weight: ${product.weight}g`}
-                  </Typography>
-                </CardContent>
-                <CardActions>
-                  <Button
-                    size="small"
-                    color="primary"
-                    onClick={handleViewOpen}
-                  >
-                    View
-                  </Button>
-                  <DialogForm
-                    open={viewOpen}
-                    handleClose={handleViewClose}
-                    handleSubmit={handleChangeProduct}
-                    initialProduct={product}
-                  />
-                  <Button
-                    size="small"
-                    color="secondary"
-                    onClick={handleRemoveOpen}
-                  >
-                    Remove
-                  </Button>
-                  <DialogRemove
-                    open={removeOpen}
-                    handleClose={handleRemoveClose}
-                    handleSubmit={handleRemove}
-                    product={product}
-                  />
-                  <LocalGroceryStoreIcon color="primary" />
-                  <LocalOfferIcon color="primary" />
-                  <MoodIcon color="primary" />
-                </CardActions>
-              </Card>
+              <ProductCard
+                product={product}
+                handleChange={handleChangeProduct}
+                handleRemove={handleRemoveProduct}
+              />
             </Grid>
           ))}
         </Grid>
