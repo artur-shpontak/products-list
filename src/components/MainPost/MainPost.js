@@ -9,7 +9,7 @@ export const MainPost = () => {
   return (
     <Paper
       className={classes.mainFeaturesPost}
-      style={{ backgroundImage: `url(https://source.unsplash.com/random)` }}
+      style={{ backgroundImage: `url(https://images.unsplash.com/photo-1617282752087-b9808a252e88?ixlib=rb-1.2.1&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=1080&fit=max)` }}
     >
       <Container fixed>
         <div className={classes.overlay} />

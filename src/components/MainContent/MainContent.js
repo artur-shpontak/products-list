@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useReducer } from 'react';
+import React, { useState, useCallback } from 'react';
 
 import { Button, Container, Grid, Typography } from '@material-ui/core';
 
@@ -10,7 +10,7 @@ import { ProductCard } from '../ProductCard';
 const product = {
   name: 'Product name',
   description: 'Product description',
-  imageUrl: 'https://source.unsplash.com/random',
+  imageUrl: 'https://nooby-games.ru/wp-content/uploads/2018/12/keyboard-338505_1920.jpg',
   height: '200',
   width: '200',
   quantity: '4',
@@ -23,16 +23,19 @@ for (let i = 0; i < productsList.length; i++) {
   productsList[i] = {...product, id: i + 1};
 }
 
-productsList[7].name = 'Average product';
-productsList[7].quantity = '5';
+productsList[0].name = 'Average product';
+productsList[0].description = 'There is no description';
+productsList[0].imageUrl = 'https://npshopping.com/images/posts/5fe4cd7cbf59d918472587.jpeg';
+productsList[0].quantity = '3';
+productsList[0].height = '50';
+productsList[0].width = '100';
+productsList[0].weight = '100';
 
 export const MainContent = ({ setNewId }) => {
   const classes = useStyles();
 
   const [products, setProducts] = useState(productsList);
   const [addOpen, setAddOpen] = useState(false);
-  //TODO find a better vay to re-render card!!
-  const [, forceUpdate] = useReducer(x => x + 1, 0);
 
   const handleAddOpen = useCallback(() => {
     setAddOpen(true);
@@ -53,14 +56,16 @@ export const MainContent = ({ setNewId }) => {
 
   const sortByQuantity = useCallback(() => {
     setProducts([...products]
-      .sort((previous, current) => previous.quantity - current.quantity));
+      .sort((previous, current) => current.quantity - previous.quantity));
   }, [products]);
 
   const handleChangeProduct = useCallback((changedProduct) => {
-    const index = products.findIndex(item => item.id === changedProduct.id);
-
-    products[index] = {...changedProduct};
-    forceUpdate();
+    setProducts(products
+      .map(product => product.id === changedProduct.id
+        ? changedProduct
+        : product
+      ),
+    );
   }, [products]);
 
   const handleRemoveProduct = useCallback((removableProductId) => {
@@ -73,7 +78,7 @@ export const MainContent = ({ setNewId }) => {
     <main>
       <MainPost />
 
-      {/* TODO create ProductsList component */}
+      {/* TODO create component MainButtons */}
       <div className={classes.mainContent}>
         <Container maxWidth="sm">
           <Typography
@@ -127,6 +132,7 @@ export const MainContent = ({ setNewId }) => {
         </Container>
       </div>
 
+      {/* TODO create component ProductCards */}
       <Container className={classes.cardGrid} maxWidth="md">
         <Grid container spacing={4}>
           {products.map((product) => (

@@ -47,7 +47,7 @@ export const ProductCard = ({
     <Card className={classes.card}>
       <CardMedia
         className={classes.cardMedia}
-        image="https://source.unsplash.com/random"
+        image={product.imageUrl}
         title="Image title"
       />
       <CardContent className={classes.cardContent}>
