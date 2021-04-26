@@ -1,5 +1,5 @@
 # Products list
-This project was created as a test task for the position of React Developer
+This project was created as a test task for the position of React Developer.
 
 See preview: [DEMO LINK](http://artur-shpontak.github.io/products-list)
 
