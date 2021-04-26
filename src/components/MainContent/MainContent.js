@@ -43,7 +43,16 @@ export const MainContent = ({ setNewId }) => {
     setProducts([...products, { ...newProduct, id: setNewId()}]);
   }, [products, setNewId]);
 
-  //TODO correct work for this method(currently edit selected product, but doesn't call re-render for the card)
+  const sortByName = useCallback(() => {
+    setProducts([...products]
+      .sort((previous, current) => previous.name.localeCompare(current.name)));
+  }, [products]);
+
+  const sortByQuantity = useCallback(() => {
+    setProducts([...products]
+      .sort((previous, current) => previous.quantity - current.quantity));
+  }, [products]);
+
   const handleChangeProduct = useCallback((changedProduct) => {
     const index = products.findIndex(item => item.id === changedProduct.id);
 
@@ -72,28 +81,46 @@ export const MainContent = ({ setNewId }) => {
           >
             Products list
           </Typography>
-          <div className={classes.mainButtons}>
-            <Grid container spacing={3} justify="center">
-              <Grid item>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  onClick={handleAddOpen}
-                >
-                  Add product
-                </Button>
-                <DialogForm
-                  open={addOpen}
-                  handleClose={handleAddClose}
-                  handleSubmit={handleAddProduct}
-                  isNewItem={true}
-                />
-              </Grid>
-              <Grid item>
-                <Button variant="outlined" color="primary">Learn More</Button>
-              </Grid>
+          <Grid
+            container
+            spacing={3}
+            justify="center"
+            alignItems="center"
+          >
+            <Grid item>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={handleAddOpen}
+              >
+                Add product
+              </Button>
+              <DialogForm
+                open={addOpen}
+                handleClose={handleAddClose}
+                handleSubmit={handleAddProduct}
+                isNewItem={true}
+              />
             </Grid>
-          </div>
+            <Grid item>
+              <Button
+                variant="outlined"
+                color="primary"
+                onClick={sortByName}
+              >
+                Sort By Name
+              </Button>
+            </Grid>
+            <Grid item>
+              <Button
+                variant="outlined"
+                color="primary"
+                onClick={sortByQuantity}
+              >
+                Sort By Quantity
+              </Button>
+            </Grid>
+          </Grid>
         </Container>
       </div>
 

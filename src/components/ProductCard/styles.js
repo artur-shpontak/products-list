@@ -7,7 +7,4 @@ export const useStyles = makeStyles((theme) => ({
   cardContent: {
     flexGrow: 1
   },
-  cardGrid: {
-    marginTop: theme.spacing(4),
-  }
 }));
