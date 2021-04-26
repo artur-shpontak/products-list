@@ -23,6 +23,9 @@ for (let i = 0; i < productsList.length; i++) {
   productsList[i] = {...product, id: i + 1};
 }
 
+productsList[7].name = 'Average product';
+productsList[7].quantity = '5';
+
 export const MainContent = ({ setNewId }) => {
   const classes = useStyles();
 

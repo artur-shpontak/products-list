@@ -5,6 +5,7 @@ import { TopBar } from './components/TopBar';
 import { MainContent } from './components/MainContent';
 import { Footer } from './components/Footer';
 
+//TODO use firebase API
 // import firebase from 'firebase/app';
 // import 'firebase/firestore';
 // import 'firebase/auth';
