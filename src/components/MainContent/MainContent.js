@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useReducer } from 'react';
 
 import { Button, Container, Grid, Typography } from '@material-ui/core';
 
@@ -28,6 +28,8 @@ export const MainContent = ({ setNewId }) => {
 
   const [products, setProducts] = useState(productsList);
   const [addOpen, setAddOpen] = useState(false);
+  //TODO find a better vay to re-render card!!
+  const [, forceUpdate] = useReducer(x => x + 1, 0);
 
   const handleAddOpen = useCallback(() => {
     setAddOpen(true);
@@ -46,6 +48,7 @@ export const MainContent = ({ setNewId }) => {
     const index = products.findIndex(item => item.id === changedProduct.id);
 
     products[index] = {...changedProduct};
+    forceUpdate();
   }, [products]);
 
   const handleRemoveProduct = useCallback((removableProductId) => {

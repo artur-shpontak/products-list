@@ -26,7 +26,7 @@ export const DialogRemoveType = {
 }
 
 export const ProductCardType = {
-  product: productType,
-  handleSubmit: PropTypes.func.isRequired,
-  handleClose: PropTypes.func.isRequired,
+  product: PropTypes.shape(productType).isRequired,
+  handleChange: PropTypes.func.isRequired,
+  handleRemove: PropTypes.func.isRequired,
 }

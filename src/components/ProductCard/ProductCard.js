@@ -9,6 +9,7 @@ import MoodIcon from '@material-ui/icons/Mood';
 import { useStyles } from './styles';
 import { DialogForm } from '../DialogForm';
 import { DialogRemove } from '../DialogRemove';
+import { ProductCardType } from '../../types';
 
 export const ProductCard = ({
   product,
@@ -98,4 +99,4 @@ export const ProductCard = ({
   );
 };
 
-
+ProductCard.propTypes = ProductCardType;

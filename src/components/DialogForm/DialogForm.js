@@ -83,19 +83,19 @@ export const DialogForm = ({
         />
         <TextField
           margin="dense"
-          name="height"
-          label="Height"
+          name="width"
+          label="Width"
           type="number"
-          value={product.height}
+          value={product.width}
           disabled={isDisabledEditing}
           onChange={handleChange}
         />
         <TextField
           margin="dense"
-          name="width"
-          label="Width"
+          name="height"
+          label="Height"
           type="number"
-          value={product.width}
+          value={product.height}
           disabled={isDisabledEditing}
           onChange={handleChange}
         />
